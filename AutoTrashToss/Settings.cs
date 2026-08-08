@@ -11,7 +11,7 @@ namespace AutoTrashToss
         public bool useLocoGlow = true;
 
         [Draw("Glow strength", Min = 1.0, Max = 10.0, Precision = 1, Tooltip = "How bright the loco-style glow is. Higher = more obvious.")]
-        public float glowIntensity = 2f;
+        public float glowIntensity = 1.5f;
 
         [Draw("Show on-screen prompt", Tooltip = "Show a \"throw away\" hint, like the \"enter vehicle\" prompt on locomotives.")]
         public bool showPrompt = true;

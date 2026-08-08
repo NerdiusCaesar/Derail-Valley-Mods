@@ -1,0 +1,8 @@
+{
+	"Id": "FirstDVMod",
+	"DisplayName": "Baby's First DV Mod",
+	"Version": "1.0.0",
+	"Author": "NerdiusCaesar",
+	"ManagerVersion": "0.27.3",
+	"EntryMethod": "FirstDVMod.Main.Load"
+}

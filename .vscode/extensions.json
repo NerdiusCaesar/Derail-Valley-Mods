@@ -1,0 +1,7 @@
+{
+  // VS Code will offer to install these when you open this folder.
+  // The C# extension gives IntelliSense/error-checking for the mod code.
+  "recommendations": [
+    "ms-dotnettools.csharp"
+  ]
+}

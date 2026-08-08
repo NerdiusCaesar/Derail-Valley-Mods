@@ -1,0 +1,65 @@
+{
+  // VS Code build tasks. Run with Ctrl+Shift+B (default build task),
+  // or Terminal > Run Task... to pick a specific one.
+  "version": "2.0.0",
+  "options": {
+    // The .NET SDK isn't on PATH, so point at it directly.
+    "env": {
+      "DOTNET": "C:\\Program Files\\dotnet\\dotnet.exe"
+    }
+  },
+  "tasks": [
+    {
+      "label": "Build & deploy: Auto Trash Toss",
+      "type": "process",
+      "command": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "args": [
+        "build",
+        "${workspaceFolder}\\AutoTrashToss\\AutoTrashToss.csproj",
+        "-c",
+        "Debug"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "detail": "Compiles AutoTrashToss and copies it into the game's Mods folder."
+    },
+    {
+      "label": "Build & deploy: First DV Mod",
+      "type": "process",
+      "command": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "args": [
+        "build",
+        "${workspaceFolder}\\FirstDVMod\\FirstDVMod.csproj",
+        "-c",
+        "Debug"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "detail": "Compiles FirstDVMod and copies it into the game's Mods folder."
+    },
+    {
+      "label": "Build & deploy: ALL mods",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Build & deploy: Auto Trash Toss",
+        "Build & deploy: First DV Mod"
+      ],
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "Builds and deploys every mod in this repo."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+	"Id": "AutoTrashToss",
+	"DisplayName": "Auto Trash Toss",
+	"Version": "1.0.0",
+	"Author": "NerdiusCaesar",
+	"ManagerVersion": "0.27.3",
+	"EntryMethod": "AutoTrashToss.Main.Load"
+}

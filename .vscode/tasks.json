@@ -20,8 +20,7 @@
         "Debug"
       ],
       "group": {
-        "kind": "build",
-        "isDefault": true
+        "kind": "build"
       },
       "problemMatcher": "$msCompile",
       "presentation": {
@@ -30,6 +29,27 @@
         "clear": true
       },
       "detail": "Compiles AutoTrashToss and copies it into the game's Mods folder."
+    },
+    {
+      "label": "Build & deploy: Shunt Split",
+      "type": "process",
+      "command": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "args": [
+        "build",
+        "${workspaceFolder}\\ShuntSplit\\ShuntSplit.csproj",
+        "-c",
+        "Debug"
+      ],
+      "group": {
+        "kind": "build",
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "detail": "Compiles ShuntSplit and copies it into the game's Mods folder."
     },
     {
       "label": "Build & deploy: First DV Mod",
@@ -55,9 +75,13 @@
       "dependsOrder": "sequence",
       "dependsOn": [
         "Build & deploy: Auto Trash Toss",
+        "Build & deploy: Shunt Split",
         "Build & deploy: First DV Mod"
       ],
-      "group": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "problemMatcher": [],
       "detail": "Builds and deploys every mod in this repo."
     }

@@ -1,0 +1,8 @@
+{
+	"Id": "ShuntSplit",
+	"DisplayName": "Shunt Split",
+	"Version": "1.0.0",
+	"Author": "NerdiusCaesar",
+	"ManagerVersion": "0.27.3",
+	"EntryMethod": "ShuntSplit.Main.Load"
+}

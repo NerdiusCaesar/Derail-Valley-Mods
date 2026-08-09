@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Derail Valley mods target .NET Framework 4.8 (matches the game's Mono runtime). -->
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>ShuntSplit</AssemblyName>
+    <RootNamespace>ShuntSplit</RootNamespace>
+    <!-- Output straight to bin\Debug (no extra net48 subfolder). -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- We don't ship the game's DLLs, so don't warn about copying them. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!-- Lets the plain .NET SDK build net48 without installing a targeting pack. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    References to the game + modding framework.
+    <Private>false</Private> means "don't copy this DLL into our output" -
+    the game already provides them at runtime.
+  -->
+  <ItemGroup>
+    <Reference Include="UnityModManager">
+      <HintPath>$(ManagedDir)\UnityModManager\UnityModManager.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(ManagedDir)\UnityModManager\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedDir)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(ManagedDir)\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DV.ThingTypes">
+      <HintPath>$(ManagedDir)\DV.ThingTypes.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Info.json must sit next to the built DLL. -->
+  <ItemGroup>
+    <None Update="Info.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- After every build, copy the mod straight into the game's Mods folder. -->
+  <Target Name="DeployToGame" AfterTargets="Build">
+    <PropertyGroup>
+      <DeployDir>$(GameDir)\Mods\$(AssemblyName)</DeployDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(DeployDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DeployDir)" />
+    <Copy SourceFiles="$(ProjectDir)Info.json" DestinationFolder="$(DeployDir)" />
+    <Message Importance="high" Text="== Deployed $(AssemblyName) to $(DeployDir) ==" />
+  </Target>
+
+</Project>

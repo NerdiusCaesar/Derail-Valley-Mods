@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using DV.Logic.Job;
 using DV.RenderTextureSystem.BookletRender;
+using DV.Booklets;
 
 namespace AnyDestTrack
 {
@@ -124,17 +125,68 @@ namespace AnyDestTrack
         }
     }
 
-    [HarmonyPatch]
-    static class TaskTrackIdPatch
+    [HarmonyPatch(typeof(Task_data), MethodType.Constructor, new System.Type[] { typeof(Task) })]
+    static class TaskDataDestinationPatch
     {
-        // There's exactly one constructor; grab it directly.
-        static MethodBase TargetMethod() => typeof(TaskTemplatePaperData).GetConstructors()[0];
-
-        private static void Postfix(TaskTemplatePaperData __instance)
+        static void Postfix(Task_data __instance, Task task)
         {
-            if (string.IsNullOrEmpty(__instance.trackId)) return;
-            // __instance.trackId is public; strip the digits: "B3I" -> "BI"
-            __instance.trackId = new string(__instance.trackId.Where(c => !char.IsDigit(c)).ToArray());
+            TaskData td = task.GetTaskData();
+            Track dest = td.destinationTrack;
+            if (dest == null) return;
+            if (!TrackUtils.DestTrackTypes.Contains(TrackUtils.TrackType(dest.ID))) return;
+
+            // (Task 2a) Report logic: count cars on ANY acceptable track as "at destination",
+            // so the report advances to the real blocker (e.g. handbrake) instead of "not at track".
+            var cars = td.cars;
+            if (cars != null && __instance.cars != null && cars.Count == __instance.cars.Count)
+            {
+                for (int i = 0; i < cars.Count; i++)
+                    if (!__instance.cars[i].isOnDestinationTrack
+                        && TrackUtils.SameYardAndType(cars[i].CurrentTrack, dest))
+                        __instance.cars[i].isOnDestinationTrack = true;
+            }
+
+            // (Task 1 + 2b) Display: show the destination yard-level on BOTH booklet and report.
+            // Build a NEW TrackID with a blank order number — see the caution below.
+            TrackID id = dest.ID;
+            __instance.destinationTrackID =
+                new TrackID(id.yardId, id.SignIDSubYardPart, "", TrackUtils.TrackType(id));
         }
+    }
+
+    // [HarmonyPatch(typeof(BookletCreator_Job), nameof(BookletCreator_Job.CreateUncoupleTaskPaperData))]
+    // static class UncoupleJobCreationPatch
+    // {
+    //     private static void Prefix(ref string trackId)
+    //     {
+    //         if (string.IsNullOrEmpty(trackId)) return;
+    //         // trackId is public; strip the digits: "B3I" -> "BI"
+    //         trackId = new string(trackId.Where(c => !char.IsDigit(c)).ToArray());
+    //     }
+    // }
+
+    // [HarmonyPatch]
+    // static class TaskTrackIdPatch
+    // {
+    //     // There's exactly one constructor; grab it directly.
+    //     static MethodBase TargetMethod() => typeof(TaskTemplatePaperData).GetConstructors()[0];
+
+    //     private static void Postfix(TaskTemplatePaperData __instance)
+    //     {
+    //         if (string.IsNullOrEmpty(__instance.trackId)) return;
+    //         // __instance.trackId is public; strip the digits: "B3I" -> "BI"
+    //         __instance.trackId = new string(__instance.trackId.Where(c => !char.IsDigit(c)).ToArray());
+    //     }
+    // }
+
+    static class TrackUtils
+    {
+        public static readonly HashSet<string> DestTrackTypes = new HashSet<string> { "I", "O", "S" };
+        public static string TrackType(TrackID id) => id.FullID.Split('-')[3];
+        public static bool SameYardAndType(Track a, Track b) =>
+            a != null && b != null
+            && a.ID.yardId == b.ID.yardId
+            && a.ID.SignIDSubYardPart == b.ID.SignIDSubYardPart
+            && TrackType(a.ID) == TrackType(b.ID);
     }
 }

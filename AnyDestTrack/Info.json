@@ -1,0 +1,8 @@
+{
+	"Id": "AnyDestTrack",
+	"DisplayName": "Finish job at any destination track in yard",
+	"Version": "1.0.0",
+	"Author": "NerdiusCaesar",
+	"ManagerVersion": "0.27.3",
+	"EntryMethod": "AnyDestTrack.Main.Load"
+}

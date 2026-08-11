@@ -52,6 +52,25 @@
       "detail": "Compiles ShuntSplit and copies it into the game's Mods folder."
     },
     {
+      "label": "Build & deploy: AnyDestTrack",
+      "type": "process",
+      "command": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "args": [
+        "build",
+        "${workspaceFolder}\\AnyDestTrack\\AnyDestTrack.csproj",
+        "-c",
+        "Debug"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "detail": "Compiles AnyDestTrack and copies it into the game's Mods folder."
+    },
+    {
       "label": "Build & deploy: First DV Mod",
       "type": "process",
       "command": "C:\\Program Files\\dotnet\\dotnet.exe",
